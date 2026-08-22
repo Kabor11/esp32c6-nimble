@@ -1,15 +1,26 @@
 #pragma once
 
+//standard
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-#include "esp_log.h"
+
+//nimble
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"
-#include "nvs_flash.h"
+
+//services
+#include "services/gap/ble_svc_gap.h"
+
+
+//host
 #include "host/ble_hs.h"
 #include "host/util/util.h"
-#include "services/gap/ble_svc_gap.h"
+
+//esp
+#include "esp_log.h"
+#include "nvs_flash.h"
+
 
 // const char* TAG = "NimBLE";
 // const char* INFO = "INFO";
