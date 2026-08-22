@@ -1,5 +1,7 @@
+#include "common.h"
 #include "ble_main.h"
 #include "ble_gap.h"
+#include "ble_gatt.h"
 
 //static const char* INFO = "BLE_MAIN_INFO";
 static const char* ERROR = "BLE_MAIN_ERROR";
@@ -20,4 +22,8 @@ void ble_init(void){
 
       rc = ble_svc_gap_device_name_set(DEVICE_NAME);
       assert(rc == 0);
+
+      rc = gatt_svr_init();
+      //assert(rc == 0);
 }
+
