@@ -11,11 +11,14 @@
 
 //services
 #include "services/gap/ble_svc_gap.h"
-
+#include "services/gatt/ble_svc_gatt.h"
+#include "services/ans/ble_svc_ans.h"
 
 //host
 #include "host/ble_hs.h"
+#include "host/ble_uuid.h"
 #include "host/util/util.h"
+
 
 //esp
 #include "esp_log.h"
