@@ -10,3 +10,8 @@
 #include "host/ble_hs.h"
 #include "host/util/util.h"
 #include "services/gap/ble_svc_gap.h"
+
+// const char* TAG = "NimBLE";
+// const char* INFO = "INFO";
+// const char* ERROR = "ERROR";
+//uint8_t own_addr_type;
