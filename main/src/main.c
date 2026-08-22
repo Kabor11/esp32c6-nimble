@@ -5,6 +5,7 @@
 
 
 static const char* VERSION = "VERSION";
+static const char* TAG = "MAIN";
 
 
 
@@ -30,9 +31,5 @@ void app_main(void)
 
       nimble_port_freertos_init(ble_host_task);
 
-      //rc = scli_init();
-      //if(rc != ESP_OK){
-      //      ESP_LOGE(TAG, "scli init failed");
-      //}
 }
 
