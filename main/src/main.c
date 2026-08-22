@@ -27,7 +27,7 @@ void app_main(void)
       //rc = gatt_svr_init();
       //assert(rc == 0);
 
-      //ble_store_config_init();
+      //ble_store_config_init(); // to się przyda potem do pairingów/bondingów jako magazyn na klucze i inne takie
 
       nimble_port_freertos_init(ble_host_task);
 
