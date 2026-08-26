@@ -24,6 +24,9 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
+//free rtos
+#include "freertos/FreeRTOSConfig.h"
+
 
 // const char* TAG = "NimBLE";
 // const char* INFO = "INFO";
