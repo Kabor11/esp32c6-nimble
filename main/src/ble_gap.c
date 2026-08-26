@@ -1,8 +1,11 @@
 #include "ble_gap.h"
+#include "ble_gatt.h"
+#include "ble_meas_chr.h"
 
 static const char* INFO = "BLE_GAP_INFO";
 static const char* ERROR = "BLE_GAP_ERROR";
 static uint8_t own_addr_type;
+static uint16_t conn_handle;
 
 void ble_on_reset(int reason){
      ESP_LOGI(ERROR, "Resetting state reason = %d", reason);
@@ -67,6 +70,7 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
 
             rc = ble_gap_conn_find(event->connect.conn_handle, &desc);
             assert(rc == 0);
+            conn_handle = event->connect.conn_handle;
 
            // ble_print_conn_desc(&desc);
 
@@ -97,20 +101,30 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
         return 0;
 
 
-    case BLE_GAP_EVENT_SUBSCRIBE:
+case BLE_GAP_EVENT_SUBSCRIBE:
 
-        ESP_LOGI(INFO,
-                    "subscribe event; conn_handle=%d attr_handle=%d "
-                    "reason=%d prevn=%d curn=%d previ=%d curi=%d\n",
-                    event->subscribe.conn_handle,
-                    event->subscribe.attr_handle,
-                    event->subscribe.reason,
-                    event->subscribe.prev_notify,
-                    event->subscribe.cur_notify,
-                    event->subscribe.prev_indicate,
-                    event->subscribe.cur_indicate);
+    ESP_LOGI(INFO,
+             "subscribe event; conn_handle=%d attr_handle=%d "
+             "reason=%d prevn=%d curn=%d previ=%d curi=%d",
+             event->subscribe.conn_handle,
+             event->subscribe.attr_handle,
+             event->subscribe.reason,
+             event->subscribe.prev_notify,
+             event->subscribe.cur_notify,
+             event->subscribe.prev_indicate,
+             event->subscribe.cur_indicate);
 
-        return 0;
+    if (event->subscribe.attr_handle == gatt_svr_chr_var_handle_getter()) {
+
+        if (event->subscribe.cur_notify) {
+            ble_meas_tx_reset();
+        } else {
+            ble_meas_tx_stop();
+        }
+
+    }
+
+    return 0;
 
 
     case BLE_GAP_EVENT_MTU:
@@ -125,6 +139,10 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
     }
 
     return 0;
+}
+
+uint16_t gap_conn_handle_getter(void){
+    return conn_handle;
 }
 
 // void ble_print_conn_desc(struct ble_gap_conn_desc *desc)

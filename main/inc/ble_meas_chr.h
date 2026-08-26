@@ -5,6 +5,7 @@
 #include "ble_gap.h"
 #include "ble_gatt.h"
 
-void ble_meas_tx_stop(TimerHandle_t ble_meas_tx_timer);
-void ble_meas_tx_reset(TimerHandle_t ble_meas_tx_timer);
-void ble_meas_tx_send(void);
+void ble_meas_tx_stop(void);
+void ble_meas_tx_reset(void);
+void ble_meas_tx_send(TimerHandle_t ev);
+void createTimer(void);

@@ -77,3 +77,7 @@ int gatt_svr_init(void){
     
     return 0;
 }
+
+uint16_t gatt_svr_chr_var_handle_getter(void){
+    return gatt_svr_chr_val_handle;
+}
