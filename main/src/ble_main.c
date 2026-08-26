@@ -17,13 +17,13 @@ void ble_init(void){
 
       ble_hs_cfg.reset_cb = ble_on_reset;
       ble_hs_cfg.sync_cb = ble_on_sync;
-      //ble_hs_cfg.gatts_register_cb = gatt_svr_register_cb;
+      ble_hs_cfg.gatts_register_cb = gatt_svr_register_cb;
       ble_hs_cfg.store_status_cb = ble_store_util_status_rr;
 
       rc = ble_svc_gap_device_name_set(DEVICE_NAME);
       assert(rc == 0);
 
       rc = gatt_svr_init();
-      //assert(rc == 0);
+      assert(rc == 0);
 }
 

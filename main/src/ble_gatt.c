@@ -4,7 +4,7 @@ static const ble_uuid128_t gatt_svr_svc_uuid =
       BLE_UUID128_INIT(0x7b, 0x4e, 0x2c, 0x91, 0x6a, 0x53, 0x4f, 0x18,
                      0x9d, 0x72, 0x31, 0xc8, 0xa6, 0xe5, 0x04, 0xbf);
 
-static uint8_t gatt_svr_chr_val; //z tej zmiennej potem zrobić albo struktuę, albo tablicę żeby wysłać ramkę
+static uint8_t gatt_svr_chr_val[7]; //z tej zmiennej potem zrobić albo struktuę, albo tablicę żeby wysłać ramkę
 static uint16_t gatt_svr_chr_val_handle;
 static const ble_uuid128_t gatt_svr_chr_uuid =
     BLE_UUID128_INIT(0xc1, 0x5f, 0x83, 0xa2, 0x9e, 0x47, 0x4b, 0x61,
@@ -64,15 +64,16 @@ int gatt_svr_init(void){
     #endif
 
     rc = ble_gatts_count_cfg(gatt_svr_svcs);
+    ESP_LOGI("GATT", "count_cfg rc = %d", rc);
     if(rc != 0){
         return rc;
     }
 
     rc = ble_gatts_add_svcs(gatt_svr_svcs);
+    ESP_LOGI("GATT", "add_svcs rc = %d", rc);
     if(rc != 0){
         return rc;
     }
-
+    
     return 0;
-
 }
