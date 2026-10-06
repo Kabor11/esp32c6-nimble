@@ -5,4 +5,5 @@ idf_component_register(SRCS
                         "src/ble_host.c"
                         "src/ble_gatt.c"
                         "src/ble_meas_chr.c"
+                        "src/i2c_pin_21_22.c"
                     INCLUDE_DIRS "inc")
