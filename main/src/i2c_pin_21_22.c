@@ -1,12 +1,5 @@
 #include "i2c_pin_21_22.h"
 
-// SDA 21
-// SCL 22
-
-#define I2C_MASTER_SCL_IO           22          
-#define I2C_MASTER_SDA_IO           21          
-#define I2C_MASTER_NUM              I2C_NUM_0
-
 esp_err_t i2c_master_init(void){
       i2c_master_bus_config_t bus_config = {
             .clk_source = I2C_CLK_SRC_DEFAULT,
