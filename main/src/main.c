@@ -1,6 +1,7 @@
 #include "common.h"
 #include "ble_main.h"
 #include "ble_host.h"
+#include "sht35_driver.h"
 
 static const char* VERSION = "VERSION";
 static const char* TAG = "MAIN";
@@ -24,5 +25,12 @@ void app_main(void)
 
       nimble_port_freertos_init(ble_host_task);
 
+      sht35_init();
+
+      sht35_queue_init();
+
+      xTaskCreate(task_sht35_read, "task_sht35_read", 2048, NULL, 5, NULL);
+
+      xTaskCreate(task_sht35_median_filter, "task_sht35_median_filter", 2048, NULL, 5, NULL);
 }
 
