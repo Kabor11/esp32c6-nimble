@@ -24,34 +24,76 @@ void ble_on_sync(void){
       ble_advertise();
 }
 
-void ble_advertise(void){
-      struct ble_gap_adv_params adv_params;
-      struct ble_hs_adv_fields adv_fields;
-      int rc;
-      memset(&adv_fields, 0, sizeof adv_fields);
 
-      adv_fields.flags = BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP;
+void ble_advertise(void)
+{
+    struct ble_gap_adv_params adv_params;
+    struct ble_hs_adv_fields adv_fields;
+    struct ble_hs_adv_fields rsp_fields;
+    int rc;
 
-      const char* name = ble_svc_gap_device_name();
-      adv_fields.name = (uint8_t *)name;
-      adv_fields.name_len = strlen(name);
-      adv_fields.name_is_complete = 1;
+    /* Główny pakiet reklamowy */
+    memset(&adv_fields, 0, sizeof(adv_fields));
 
-      rc = ble_gap_adv_set_fields(&adv_fields);
-      if(rc != 0){
-            return;
-      }
+    adv_fields.flags = BLE_HS_ADV_F_DISC_GEN |
+                       BLE_HS_ADV_F_BREDR_UNSUP;
 
-      memset(&adv_params, 0, sizeof adv_params);
-      adv_params.conn_mode = BLE_GAP_CONN_MODE_UND;
-      adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
+    static const ble_uuid128_t service_uuid =
+        BLE_UUID128_INIT(
+            0x7b, 0x4e, 0x2c, 0x91,
+            0x6a, 0x53, 0x4f, 0x18,
+            0x9d, 0x72, 0x31, 0xc8,
+            0xa6, 0xe5, 0x04, 0xbf
+        );
 
-      rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER, &adv_params, ble_gap_event, NULL);
+    adv_fields.uuids128 = (ble_uuid128_t *)&service_uuid;
+    adv_fields.num_uuids128 = 1;
+    adv_fields.uuids128_is_complete = 1;
 
-      if(rc != 0){
-            return;
-      }
+    rc = ble_gap_adv_set_fields(&adv_fields);
+    if (rc != 0) {
+        ESP_LOGE(ERROR, "Advertising fields failed: %d", rc);
+        return;
+    }
+
+    /* Scan response: nazwa urządzenia */
+    memset(&rsp_fields, 0, sizeof(rsp_fields));
+
+    const char *name = ble_svc_gap_device_name();
+
+    rsp_fields.name = (uint8_t *)name;
+    rsp_fields.name_len = strlen(name);
+    rsp_fields.name_is_complete = 1;
+
+    rc = ble_gap_adv_rsp_set_fields(&rsp_fields);
+    if (rc != 0) {
+        ESP_LOGE(ERROR, "Scan response fields failed: %d", rc);
+        return;
+    }
+
+    /* Parametry reklamowania */
+    memset(&adv_params, 0, sizeof(adv_params));
+
+    adv_params.conn_mode = BLE_GAP_CONN_MODE_UND;
+    adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
+
+    rc = ble_gap_adv_start(
+        own_addr_type,
+        NULL,
+        BLE_HS_FOREVER,
+        &adv_params,
+        ble_gap_event,
+        NULL
+    );
+
+    if (rc != 0) {
+        ESP_LOGE(ERROR, "Advertising start failed: %d", rc);
+        return;
+    }
+
+    ESP_LOGI(INFO, "Advertising started with service UUID");
 }
+
 
 int ble_gap_event(struct ble_gap_event *event, void *arg)
 {
