@@ -5,7 +5,7 @@
 static const char* INFO = "BLE_GAP_INFO";
 static const char* ERROR = "BLE_GAP_ERROR";
 static uint8_t own_addr_type;
-static uint16_t conn_handle;
+static uint16_t conn_handle = BLE_HS_CONN_HANDLE_NONE;;
 
 void ble_on_reset(int reason){
      ESP_LOGI(ERROR, "Resetting state reason = %d", reason);
@@ -72,6 +72,8 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
             assert(rc == 0);
             conn_handle = event->connect.conn_handle;
 
+            ESP_LOGI(INFO, "Connected, conn_handle=%u", conn_handle);
+
            // ble_print_conn_desc(&desc);
 
             ESP_LOGI(INFO, "\n");
@@ -92,6 +94,10 @@ int ble_gap_event(struct ble_gap_event *event, void *arg)
                     event->disconnect.reason);
 
         //ble_print_conn_desc(&event->disconnect.conn);
+        conn_handle = BLE_HS_CONN_HANDLE_NONE;
+
+        ESP_LOGI(INFO, "Disconnected, old conn_handle=%u",
+         event->disconnect.conn.conn_handle);
 
         ESP_LOGI(INFO, "\n");
 

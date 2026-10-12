@@ -1,6 +1,7 @@
 #include "sht35_driver.h"
 #include "i2c_pin_21_22.h"
 #include "mathematic.h"
+#include "ble_meas_chr.h"
 
 static QueueHandle_t sht35_queue = NULL;
 
@@ -150,7 +151,9 @@ void task_sht35_median_filter(void *pvParameters) {
                         uint16_t median_temperature = temperature_buffer[4]; // Median value for 9 samples
                         uint16_t median_humidity = humidity_buffer[4]; // Median value for 9 samples
 
-                        ESP_LOGI("SHT35", "Median Temperature: %u, Median Humidity: %u", median_temperature, median_humidity);
+                        ESP_LOGI("SHT35", "Median Temperature: 0x%04X, Median Humidity: 0x%04X", median_temperature, median_humidity);
+
+                        ble_meas_tx_send(median_temperature, median_humidity);
                   }
                 
             }
